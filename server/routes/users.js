@@ -1,8 +1,10 @@
 var users = {
 
     getAll: function (req, res) {
-        var allusers = data; // Spoof a DB call
-        res.json(allusers);
+        var collection = req.db.get('users');
+        collection.find({}, {}, function (e, docs) {
+            res.json(docs);
+        });
     },
 
     getOne: function (req, res) {
@@ -12,9 +14,34 @@ var users = {
     },
 
     create: function (req, res) {
-        var newuser = req.body;
-        data.push(newuser); // Spoof a DB call
-        res.json(newuser);
+        var db = req.db;
+        var userName = req.body.username;
+        var password = req.body.password;
+
+        // Set our collection
+        var collection = db.get('users');
+
+        // Submit to the DB
+        collection.insert({
+            "username" : userName,
+            "password" : password
+        }, function (err, doc) {
+            if (err) {
+                // If it failed, return error
+                res.send("There was a problem adding the information to the database.");
+                res.json({
+                    "status": 403,
+                    "message": "Not Authorized"
+                });
+            }
+            else {
+                res.status(200);
+                res.json({
+                    "status": 200,
+                    "message": "Success"
+                });
+            }
+        });
     },
 
     update: function (req, res) {
@@ -25,21 +52,24 @@ var users = {
     },
 
     delete: function (req, res) {
-        var id = req.params.id;
-        data.splice(id, 1); // Spoof a DB call
-        res.json(true);
+        console.log(req.body);
+        req.db.get('users').remove(req.body, function (err, result) {
+            console.log(err);
+            if (result === 1) {
+                res.status(200);
+                res.json({
+                    "status": 200,
+                    "message": "Success"
+                });
+            } else {
+                res.status(302);
+                res.json({
+                    "status": 302,
+                    "message": "Not found"
+                });
+
+            }
+        });
     }
 };
-
-var data = [{
-    name: 'user 1',
-    id: '1'
-}, {
-    name: 'user 2',
-    id: '2'
-}, {
-    name: 'user 3',
-    id: '3'
-}];
-
 module.exports = users;

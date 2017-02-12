@@ -25,9 +25,13 @@ var products = {
     },
 
     delete: function (req, res) {
-        var id = req.params.id;
-        data.splice(id, 1); // Spoof a DB call
-        res.json(true);
+        // req.db.get("users").remove(req.body, function (err, numberOfRemoved) {
+        //     if (err || numberOfRemoved == 0) {
+        //
+        //     } else {
+        //         req.
+        //     }
+        // });
     }
 };
 

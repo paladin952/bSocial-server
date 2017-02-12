@@ -1,13 +1,9 @@
 var jwt = require('jwt-simple');
-
-
-var users = [];
-var user1 = {username: 'user1', password: 'password1'};
+var user = require('./users.js');
 
 var auth = {
 
-    login: function(req, res) {
-        console.log("here2");
+    login: function (req, res) {
         var username = req.body.username || '';
         var password = req.body.password || '';
 
@@ -20,34 +16,30 @@ var auth = {
             return;
         }
 
-        // Fire a query to your DB and check if the credentials are valid
-        var dbUserObj = auth.validate(username, password);
+        var collection = req.db.get('users');
+        collection.findOne({username: username, password: password}, function (err, doc) {
+            var dbUserObj = doc;
+            if (err || !doc) {
+                dbUserObj = null
+            }
 
-        if (!dbUserObj) { // If authentication fails, we send a 401 back
-            res.status(401);
-            res.json({
-                "status": 401,
-                "message": "Invalid credentials"
-            });
-            return;
-        }
+            if (!dbUserObj) {
+                // console.log("here1");
+                res.status(401);
+                res.json({
+                    "status": 401,
+                    "message": "Invalid credentials"
+                });
+            } else {
+                // console.log("here2");
+                res.status(200);
+                res.json(genToken(dbUserObj));
+            }
 
-        if (dbUserObj) {
-
-            // If authentication is success, we will generate a token
-            // and dispatch it to the client
-
-            res.json(genToken(dbUserObj));
-        }
-
+        });
     },
 
-    register: function (req, res) {
-        var username = req.body.username || '';
-        var password = req.body.password || '';
-    },
-
-    validate: function(username, password) {
+    validate: function (username, password) {
         // spoofing the DB response for simplicity
         var dbUserObj = { // spoofing a userobject from the DB.
             name: 'arvind',
@@ -58,7 +50,7 @@ var auth = {
         return dbUserObj;
     },
 
-    validateUser: function(username) {
+    validateUser: function (username) {
         // spoofing the DB response for simplicity
         var dbUserObj = { // spoofing a userobject from the DB.
             name: 'arvind',

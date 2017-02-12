@@ -7,10 +7,19 @@ var users = {
         });
     },
 
-    getOne: function (req, res) {
-        var id = req.params.id;
-        var user = data[0]; // Spoof a DB call
-        res.json(user);
+    getOne: function (db, username, password, callback) {
+            console.log("hereeee1");
+        var collection = db.get('users');
+        collection.findOne({username: username, password: password}, function (err, doc) {
+            console.log("hereeee2");
+            console.log(doc);
+            console.log(err);
+            if (err || !doc) {
+                callback(null);
+            } else {
+                callback(doc);
+            }
+        });
     },
 
     create: function (req, res) {
@@ -23,8 +32,8 @@ var users = {
 
         // Submit to the DB
         collection.insert({
-            "username" : userName,
-            "password" : password
+            "username": userName,
+            "password": password
         }, function (err, doc) {
             if (err) {
                 // If it failed, return error
@@ -49,27 +58,6 @@ var users = {
         var id = req.params.id;
         data[id] = updateuser; // Spoof a DB call
         res.json(updateuser);
-    },
-
-    delete: function (req, res) {
-        console.log(req.body);
-        req.db.get('users').remove(req.body, function (err, result) {
-            console.log(err);
-            if (result === 1) {
-                res.status(200);
-                res.json({
-                    "status": 200,
-                    "message": "Success"
-                });
-            } else {
-                res.status(302);
-                res.json({
-                    "status": 302,
-                    "message": "Not found"
-                });
-
-            }
-        });
     }
 };
 module.exports = users;

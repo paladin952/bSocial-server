@@ -8,12 +8,8 @@ var users = {
     },
 
     getOne: function (db, username, password, callback) {
-            console.log("hereeee1");
         var collection = db.get('users');
         collection.findOne({username: username, password: password}, function (err, doc) {
-            console.log("hereeee2");
-            console.log(doc);
-            console.log(err);
             if (err || !doc) {
                 callback(null);
             } else {

@@ -1,6 +1,4 @@
 var jwt = require('jwt-simple');
-var user = require('./users.js');
-
 var auth = {
 
     login: function (req, res) {
@@ -24,7 +22,6 @@ var auth = {
             }
 
             if (!dbUserObj) {
-                // console.log("here1");
                 res.status(401);
                 res.json({
                     "status": 401,
@@ -39,17 +36,6 @@ var auth = {
         });
     },
 
-    validate: function (username, password) {
-        // spoofing the DB response for simplicity
-        var dbUserObj = { // spoofing a userobject from the DB.
-            name: 'arvind',
-            role: 'admin',
-            username: 'arvind@myapp.com'
-        };
-
-        return dbUserObj;
-    },
-
     validateUser: function (username) {
         // spoofing the DB response for simplicity
         var dbUserObj = { // spoofing a userobject from the DB.
@@ -62,7 +48,6 @@ var auth = {
     },
 }
 
-// private method
 function genToken(user) {
     var expires = expiresIn(365); // 7 days
     var token = jwt.encode({

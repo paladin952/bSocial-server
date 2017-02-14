@@ -50,10 +50,42 @@ var users = {
     },
 
     update: function (req, res) {
-        var updateuser = req.body;
-        var id = req.params.id;
-        data[id] = updateuser; // Spoof a DB call
-        res.json(updateuser);
+        var collection = req.db.get('users');
+        collection.update({
+            '_id': req.body._id
+        }, {
+            $set: {
+                password: req.body.password,
+                username: req.body.username
+            }
+        }, {
+            w: 1
+        }, function (err, result) {
+            console.log(result);
+            console.log(err);
+            res.status(200);
+            if (err) {
+                res.status(404);
+                res.json({
+                    "status": 404,
+                    "message": "Not found"
+                });
+            } else {
+                if (result.n == 1) {
+                    res.status(200);
+                    res.json({
+                        "status": 200,
+                        "message": "Success"
+                    });
+                } else {
+                    res.status(404);
+                    res.json({
+                        "status": 404,
+                        "message": "Not found"
+                    });
+                }
+            }
+        });
     }
 };
 module.exports = users;

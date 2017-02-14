@@ -28,7 +28,6 @@ var auth = {
                     "message": "Invalid credentials"
                 });
             } else {
-                // console.log("here2");
                 res.status(200);
                 res.json(genToken(dbUserObj));
             }

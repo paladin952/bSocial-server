@@ -19,11 +19,20 @@ var users = {
     },
 
     create: function (req, res) {
-        var db = req.db;
-        var userName = req.body.username;
+        var username = req.body.username;
         var password = req.body.password;
 
+        if (username == '' || password == '') {
+            res.status(401);
+            res.json({
+                "status": 401,
+                "message": "Invalid parameters"
+            });
+            return;
+        }
+
         // Set our collection
+        var db = req.db;
         var collection = db.get('users');
 
         // Submit to the DB
@@ -50,6 +59,17 @@ var users = {
     },
 
     update: function (req, res) {
+        var username = req.body.username;
+        var password = req.body.password;
+        if (username == '' || password == '') {
+            res.status(401);
+            res.json({
+                "status": 401,
+                "message": "Invalid parameters"
+            });
+            return;
+        }
+
         var collection = req.db.get('users');
         collection.update({
             '_id': req.body._id

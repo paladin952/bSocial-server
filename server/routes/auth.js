@@ -33,19 +33,8 @@ var auth = {
             }
 
         });
-    },
-
-    validateUser: function (username) {
-        // spoofing the DB response for simplicity
-        var dbUserObj = { // spoofing a userobject from the DB.
-            name: 'arvind',
-            role: 'admin',
-            username: 'arvind@myapp.com'
-        };
-
-        return dbUserObj;
-    },
-}
+    }
+};
 
 function genToken(user) {
     var expires = expiresIn(365); // 7 days

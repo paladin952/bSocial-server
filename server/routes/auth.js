@@ -1,4 +1,5 @@
 var jwt = require('jwt-simple');
+var userManager = require("../database/userManager");
 var auth = {
 
     login: function (req, res) {
@@ -14,8 +15,7 @@ var auth = {
             return;
         }
 
-        var collection = req.db.get('users');
-        collection.findOne({username: username, password: password}, function (err, doc) {
+        userManager.getOne(req.db, username, password, function (err, doc) {
             var dbUserObj = doc;
             if (err || !doc) {
                 dbUserObj = null

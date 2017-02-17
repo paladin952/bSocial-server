@@ -1,20 +1,10 @@
+var userManager = require("../database/userManager");
+
 var users = {
 
     getAll: function (req, res) {
-        var collection = req.db.get('users');
-        collection.find({}, {}, function (e, docs) {
+        userManager.getAll(req.db, function (e, docs) {
             res.json(docs);
-        });
-    },
-
-    getOne: function (db, username, password, callback) {
-        var collection = db.get('users');
-        collection.findOne({username: username, password: password}, function (err, doc) {
-            if (err || !doc) {
-                callback(null);
-            } else {
-                callback(doc);
-            }
         });
     },
 
@@ -31,15 +21,8 @@ var users = {
             return;
         }
 
-        // Set our collection
         var db = req.db;
-        var collection = db.get('users');
-
-        // Submit to the DB
-        collection.insert({
-            "username": userName,
-            "password": password
-        }, function (err, doc) {
+        userManager.create(db, username, password, function (err, doc) {
             if (err) {
                 // If it failed, return error
                 res.send("There was a problem adding the information to the database.");
@@ -70,17 +53,8 @@ var users = {
             return;
         }
 
-        var collection = req.db.get('users');
-        collection.update({
-            '_id': req.body._id
-        }, {
-            $set: {
-                password: req.body.password,
-                username: req.body.username
-            }
-        }, {
-            w: 1
-        }, function (err, result) {
+        var db = req.db;
+        userManager.update(db, req.body._id, username, password, function (err, result) {
             console.log(result);
             console.log(err);
             res.status(200);

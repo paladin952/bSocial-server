@@ -6,6 +6,7 @@ var users = {
         console.log("username");
         console.log(req.username);
         userManager.getAll(req.db, function (e, docs) {
+            res.status(200);
             res.json(docs);
         });
     },

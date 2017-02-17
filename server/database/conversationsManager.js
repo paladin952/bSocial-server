@@ -4,3 +4,5 @@ var conversationsManager = {
         db.get('conversations').find({}, {}, callback);
     }
 };
+
+module.exports = conversationsManager;

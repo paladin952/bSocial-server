@@ -1,4 +1,5 @@
 var jwt = require('jwt-simple');
+var userManager = require('../database/userManager');
 
 module.exports = function (req, res, next) {
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
@@ -8,7 +9,6 @@ module.exports = function (req, res, next) {
     } else {
         if (token) {
             try {
-
                 try {
                     var decoded = jwt.decode(token, require('../config/secret.js')());
                 } catch (err) {
@@ -29,16 +29,26 @@ module.exports = function (req, res, next) {
                     return;
                 }
 
-                if (req.url.indexOf('/api/v1/') >= 0) {
-                    next(); // To move to next middleware
-                } else {
-                    res.status(403);
-                    res.json({
-                        "status": 403,
-                        "message": "Not Authorized"
-                    });
-                    return;
-                }
+                userManager.getUser(req.db, token, function (err, res) {
+                    if (err || !res) {
+                        res.status(401);
+                        res.json({
+                            "status": 401,
+                            "message": "Invalid Token"
+                        });
+                    } else {
+                        if (req.url.indexOf('/api/v1/') >= 0) {
+                            req.username = res.username;
+                            next(); // To move to next middleware
+                        } else {
+                            res.status(403);
+                            res.json({
+                                "status": 403,
+                                "message": "Not Authorized"
+                            });
+                        }
+                    }
+                });
 
             } catch (err) {
                 res.status(500);

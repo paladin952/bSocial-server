@@ -29,7 +29,10 @@ var auth = {
                 });
             } else {
                 res.status(200);
-                res.json(genToken(dbUserObj));
+                var loginModel = genToken(dbUserObj);
+                userManager.updateToken(req.db, loginModel.user.username, loginModel.token, function () {
+                });
+                res.json(loginModel);
             }
 
         });

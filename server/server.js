@@ -12,18 +12,16 @@ var db = monk('localhost:27017/db');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 
-// Make our db accessible to our router
-app.use(function(req,res,next){
+app.use(function (req, res, next) {
     req.db = db;
     next();
 });
 
 app.all('/*', function (req, res, next) {
-    // CORS headers
     res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     // Set custom headers for CORS
-    res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+    res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token');
     if (req.method == 'OPTIONS') {
         res.status(200).end();
     } else {
@@ -42,9 +40,7 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-// Start the server
 app.set('port', process.env.PORT || 3000);
-
 var server = app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + server.address().port);
+    console.log('Server listening on port ' + server.address().port);
 });

@@ -4,7 +4,7 @@ var userManager = require('../database/userManager');
 module.exports = function (req, res, next) {
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
 
-    if (req.url.indexOf('/api/v1/login') >= 0) {
+    if (req.url.indexOf('/api/v1/login') >= 0 || req.url.indexOf('/api/v1/user') >= 0) {
         next();
     } else {
         if (token) {

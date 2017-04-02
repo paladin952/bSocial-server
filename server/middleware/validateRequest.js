@@ -39,6 +39,7 @@ module.exports = function (req, res, next) {
                     } else {
                         if (req.url.indexOf('/api/v1/') >= 0) {
                             req.username = res.username;
+                            req.userId = res._id;
                             next(); // To move to next middleware
                         } else {
                             res.status(403);

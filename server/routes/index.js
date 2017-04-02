@@ -22,5 +22,6 @@ router.put('/api/v1/user', user.update);
  */
 router.get("/api/v1/conversations", conversation.getAll);
 router.get("/api/v1/conversations/:id", conversation.getOne);
+router.post("/api/v1/conversations/comment", conversation.comment);
 
 module.exports = router;

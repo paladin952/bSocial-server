@@ -21,5 +21,6 @@ router.put('/api/v1/user', user.update);
  * Routes for conversations data
  */
 router.get("/api/v1/conversations", conversation.getAll);
+router.get("/api/v1/conversations/:id", conversation.getOne);
 
 module.exports = router;

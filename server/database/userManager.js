@@ -1,3 +1,5 @@
+var ObjectId = require('mongodb').ObjectID;
+
 var userManager = {
     getAll: function (db, callback) {
         db.get('users').find({}, {}, callback);
@@ -5,6 +7,12 @@ var userManager = {
 
     getOne: function (db, username, password, callback) {
         db.get('users').findOne({username: username, password: password}, callback);
+    },
+
+    getOneById: function (db, objectId, callback) {
+        console.log("getOneById");
+        console.log(objectId);
+        db.get('users').findOne({_id : objectId}, callback);
     },
 
     create: function (db, username, password, phone, callback) {

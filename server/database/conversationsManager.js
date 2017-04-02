@@ -4,6 +4,16 @@ var conversationsManager = {
         db.get('conversations').find({}, {}, callback);
     },
 
+    getAllForThisUser: function (db, userId, callback) {
+        db.get('conversations').find(
+            {
+                people: userId
+            },
+            {},
+            callback
+        );
+    },
+
     getOne: function (db, id, callback) {
         db.get('conversations').findOne({_id: id}, callback);
     },
